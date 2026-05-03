@@ -1,0 +1,189 @@
+---
+interface Props {
+  text: string;
+  rotation?: number;
+  class?: string;
+}
+
+const { text, rotation = 0, class: className } = Astro.props;
+---
+
+<div class:list={["tape-effect", className]} data-rotation={rotation}>
+  <svg class="tape-svg" viewBox="0 0 200 80" preserveAspectRatio="none">
+    <defs>
+      <linearGradient id="tape-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" style="stop-color:rgba(212,146,74,0.5)" />
+        <stop offset="50%" style="stop-color:rgba(212,146,74,0.4)" />
+        <stop offset="100%" style="stop-color:rgba(212,146,74,0.5)" />
+      </linearGradient>
+    </defs>
+    <!-- Smooth latitude-like curve: narrow edges, wide middle, top/bottom borders only -->
+    <path d="M 0 20 Q 20 15, 100 15 Q 180 15, 200 20 L 200 50 Q 180 55, 100 55 Q 20 55, 0 50 L 0 20 Z" 
+          fill="url(#tape-gradient)" stroke="none"/>
+    <!-- Top border -->
+    <!-- Bottom border -->
+    <path d="M 0 20 Q 20 15, 100 15 Q 180 15, 200 20" fill="none" stroke="#000000" stroke-width="2"/>
+    <path d="M 0 50 Q 20 55, 100 55 Q 180 55, 200 50" fill="none" stroke="#000000" stroke-width="2"/>
+  </svg>
+  <canvas class="tape-canvas"></canvas>
+</div>
+
+<style>
+  .tape-effect {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 120%;
+    height: 80px;
+    z-index: 20;
+    overflow: visible;
+  }
+
+  .tape-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  .tape-effect[data-rotation="-15"] {
+    transform: translate(-50%, -50%) rotate(-15deg);
+  }
+
+  .tape-effect[data-rotation="10"] {
+    transform: translate(-50%, -50%) rotate(10deg);
+  }
+
+  .tape-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+</style>
+
+<script define:vars={{ text }}>
+  (function() {
+    const containers = document.querySelectorAll('.tape-effect');
+    
+    containers.forEach(container => {
+      const canvas = container.querySelector('.tape-canvas');
+      const ctx = canvas.getContext('2d');
+      
+      // Set canvas size
+      const updateCanvasSize = () => {
+        const rect = container.getBoundingClientRect();
+        canvas.width = rect.width;
+        canvas.height = rect.height;
+      };
+      
+      updateCanvasSize();
+      window.addEventListener('resize', updateCanvasSize);
+      
+      // Spatial scaling function: larger in middle (1.4x), smaller at edges (0.6x)
+      const calculateSpatialScale = (xPos) => {
+        const centerX = 0.5;
+        const distanceFromCenter = Math.abs(xPos - centerX);
+        const minScale = 0.6, maxScale = 1.4;
+        // Coefficient 3.2 gives: center=1.4, edges=0.6
+        // At d=0.5: 1.4 - 0.25*3.2 = 1.4 - 0.8 = 0.6 ✓
+        const scale = maxScale - (distanceFromCenter * distanceFromCenter * 1.0);
+        return scale*1.2;
+      };
+      
+      // Horizontal scale function for spherical projection (edge compression)
+      // At edges: compressed horizontally (smaller X scale)
+      // At middle: normal horizontal scale
+      const calculateHorizontalScale = (xPos) => {
+        const centerX = 0.5;
+        const distanceFromCenter = Math.abs(xPos - centerX);
+        const xScale = Math.cos(distanceFromCenter * Math.PI ) * 0.7;
+        return xScale;
+      };
+      
+      // Duplicate text for seamless scrolling
+      let fullText = text + " ";
+      while(ctx.measureText(fullText).width < canvas.width)
+        fullText += text + " ";
+      const scrollSpeed = 30; // base pixels per second
+      
+      // Measure all characters
+      ctx.font = '20px SmileySans, sans-serif';
+      const totalWidth = ctx.measureText(fullText).width;
+      const charWidths = fullText.split('').map((char, index) => {
+        return {
+          char,
+          width: ctx.measureText(char).width,
+          position: 0,
+        };
+      });
+      charWidths[0].position = -totalWidth * 0.5; // Start from left side
+      for(let i=1;i<charWidths.length;i++){
+        charWidths[i].position = charWidths[i-1].position + charWidths[i-1].width;
+      }
+
+      const render = (timestamp) => {
+        const deltaTime = timestamp - (render.lastTime || timestamp);
+        render.lastTime = timestamp;
+        
+        const screenCenter = canvas.width / 2;
+        
+        // Update each character's position independently based on its screen position
+        charWidths.forEach((charData) => {
+          charData.position -= scrollSpeed * (deltaTime / 1000);
+          
+          // Wrap character around when it goes too far left
+          if (charData.position < -totalWidth * 0.5) {
+            charData.position += totalWidth;
+          }
+        });
+        
+        // Clear canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const centerY = canvas.height / 2;
+        
+        ctx.font = 'oblique 42px SmileySans, sans-serif';
+        ctx.fillStyle = '#000000';
+        ctx.textBaseline = 'middle';
+        ctx.textAlign = 'left';
+        // Render each character at its current position
+        for (let i = 0; i < charWidths.length; i++) {
+          const charData = charWidths[i];
+          const char = charData.char;
+          const charWidth = charData.width;
+          const currentX = charData.position;
+          
+          // Map position to screen-relative normalized X for spatial scaling
+          const normalizedX = (currentX + charWidth / 2 + screenCenter) / canvas.width;
+          if(normalizedX<0 || normalizedX>1) continue;
+          const positionX = (1 - Math.cos(normalizedX * Math.PI))/2 * canvas.width;
+          
+          // Calculate scale based on SPATIAL position (not time)
+          const scale = calculateSpatialScale(normalizedX);
+          
+          // Calculate horizontal scale for edge compression effect
+          const xScale = calculateHorizontalScale(normalizedX);
+          
+          // Skip off-screen characters BEFORE drawing
+          if (positionX > canvas.width + 50) continue;
+          if (positionX < -charWidth - 50) continue;
+          // Draw character with spatial scaling (both X and Y)
+          ctx.save();
+          ctx.translate(positionX, centerY);
+          ctx.scale(xScale, scale);
+          ctx.fillText(char, -charWidth / 2, 0);
+          ctx.restore();
+        }
+
+        requestAnimationFrame(render);
+      };
+      
+      render.lastTime = 0;
+      requestAnimationFrame(render);
+    });
+  })();
+</script>

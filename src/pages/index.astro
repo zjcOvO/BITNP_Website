@@ -1,8 +1,22 @@
 ---
 import Layout from '../layout/BaseLayout.astro';
+import HeroSection from '../components/home/HeroSection.astro';
+import FooterCategories from '../components/home/FooterCategories.astro';
+import '../styles/pages/index.css';
 ---
 
-<Layout>
-	<h1>欢迎来到 BITNP-Website</h1>
-	<p>这是首页内容。</p>
+<Layout 
+  title="网络开拓者协会 - 北京理工大学"
+  description="北京理工大学网络开拓者协会（BITNP）官方网站。校园网服务、NPLive直播、BITHESIS LaTeX模板等。"
+  fullWidth={true}
+  showFooter={false}
+>
+  <div class="home-page">
+    <!-- 主视觉区：Logo + 标题 + 简介 -->
+    <HeroSection />
+    
+    <!-- 底部分类导航 -->
+    <FooterCategories />
+  </div>
 </Layout>
+

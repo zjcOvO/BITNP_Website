@@ -1,0 +1,22 @@
+---
+// FooterCategories.astro - 底部分类导航条
+import { categories } from '../../data/categories.js';
+import '../../styles/components/home/footer-categories.css';
+---
+
+<section class="footer-categories">
+  <div class="categories-container">
+    {categories.map((cat) => (
+      <a href={cat.href} class="category-item">
+        <div class="category-main">
+          <span class="category-name">{cat.name}</span>
+          {cat.hasGradient ? (
+            <span class="category-gradient" />
+          ) : null}
+        </div>
+        <span class="category-pinyin">{cat.pinyin}</span>
+      </a>
+    ))}
+  </div>
+</section>
+

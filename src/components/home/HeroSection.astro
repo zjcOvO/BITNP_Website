@@ -1,0 +1,126 @@
+---
+// HeroSection.astro - 首页主视觉区域
+// 左侧：协会Logo（带装饰胶带和头像）
+// 右侧：大标题 + 英文副标题 + 标语 + 服务卡片(鼠标悬停Logo时变为简介)
+import '../../styles/components/home/hero.css';
+import { services } from '../../data/services.js';
+import TapeEffect from './TapeEffect.astro';
+
+const tapeText = "网络无限 开拓不懈 —— 网络开拓者协会 Net Pioneer Association of BIT";
+---
+
+<section class="hero-section">
+  <div class="hero-container">
+    <!-- 左侧：Logo区域（悬停时触发右侧内容变换） -->
+    <div class="hero-left">
+      <div class="logo-wrapper" id="logo-trigger">
+        <!-- 上方小头像装饰 -->
+        <div class="avatar-decoration avatar-top">
+          <img src="/images/avatar-top.png" alt="装饰头像" />
+        </div>
+        
+        <!-- 协会圆形Logo -->
+        <div class="association-logo">
+          <img src="/images/bitnp-logo.png" alt="北京理工大学网络开拓者协会" />
+        </div>
+        
+        <!-- 左下方小图标装饰 -->
+        <div class="avatar-decoration avatar-bottom">
+          <img src="/images/avatar-bottom.png" alt="装饰图标" />
+        </div>
+        
+        <!-- 交叉装饰胶带 - 空间缩放效果 -->
+        <TapeEffect text={tapeText} rotation="-15" />
+        <TapeEffect text={tapeText} rotation="10" />
+      </div>
+    </div>
+    
+    <!-- 右侧：标题与内容区域 -->
+    <div class="hero-right">
+      <h1 class="hero-title">网络开拓者协会</h1>
+      <h2 class="hero-subtitle">Net Pioneer<br>Association of BIT</h2>
+      
+      <div class="hero-slogan">
+        <span class="slogan-text">网络无限开拓不懈</span>
+        <span class="slogan-divider">||||||||||||||||||||||||||||||</span>
+      </div>
+      
+      <!-- 服务卡片/简介切换区域 -->
+      <div class="hero-content-switcher">
+        <!-- 服务卡片组（悬停Logo时变为简介） -->
+        <div class="hero-cards" id="hero-cards">
+          {services.map((service) => (
+            <a href={service.href} class={`service-card service-card--${service.variant}`}>
+              <div class="card-content">
+                <h3 class="card-title">{service.title}</h3>
+                <p class="card-description">{service.description}</p>
+              </div>
+              {service.decorations ? (
+                <div class="card-decorations">
+                  <span class="dot dot-pink"></span>
+                  <span class="dot dot-orange"></span>
+                  <span class="pill pill-yellow"></span>
+                  <span class="pill pill-pink"></span>
+                </div>
+              ) : null}
+            </a>
+          ))}
+        </div>
+        
+        <!-- 简介段落（默认隐藏，悬停Logo时显示） -->
+        <div class="hero-description" id="hero-description">
+        <p>
+          &emsp;&emsp;<a href="/" class="highlight-link">网络开拓者协会</a>
+          是北京理工大学校内规模最大的学生组织之一，本着 “网络无限，开拓不懈” 的精神，不断摸索、引领校园网络建设，后成为校团委领导的全校唯一 IT 类学生组织。
+        </p>
+        <p>
+          &emsp;&emsp;如今，网协各项规章制度和硬件设备基本完善，成长为北理最大的
+          <a href="/services" class="highlight-link">网络服务提供</a>
+          团体，拥有每日最高的<span class="highlight">访问量</span>。
+          从学校学生工作，到日常娱乐服务，协会的服务范围仍然在继续扩大。
+          同时，协会自身也在不断努力增强实力，拓展业务。
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', function() {
+    const logoTrigger = document.getElementById('logo-trigger');
+    const heroCards = document.getElementById('hero-cards');
+    const heroDescription = document.getElementById('hero-description');
+    
+    let isLocked = false;
+    
+    if (logoTrigger && heroCards && heroDescription) {
+      // 点击切换固定状态
+      logoTrigger.addEventListener('click', function() {
+        isLocked = !isLocked;
+        if (isLocked) {
+          heroCards.classList.add('hidden');
+          heroDescription.classList.add('visible');
+        } else {
+          heroCards.classList.remove('hidden');
+          heroDescription.classList.remove('visible');
+        }
+      });
+      
+      // 鼠标悬停时，如果未锁定则切换
+      logoTrigger.addEventListener('mouseenter', function() {
+        if (!isLocked) {
+          heroCards.classList.add('hidden');
+          heroDescription.classList.add('visible');
+        }
+      });
+      
+      // 鼠标离开时，如果未锁定则恢复
+      logoTrigger.addEventListener('mouseleave', function() {
+        if (!isLocked) {
+          heroCards.classList.remove('hidden');
+          heroDescription.classList.remove('visible');
+        }
+      });
+    }
+  });
+</script>

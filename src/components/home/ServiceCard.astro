@@ -1,0 +1,28 @@
+---
+// ServiceCard.astro - 单个服务卡片组件
+const { title, description, href, icon, variant = 'default', decorations = false } = Astro.props;
+import '../../styles/components/home/service-card.css';
+---
+
+<a href={href} class={`service-card service-card--${variant}`}>
+  <div class="card-content">
+    {icon ? (
+      <div class="card-icon">
+        <img src={icon} alt="" />
+      </div>
+    ) : null}
+
+    <h3 class="card-title">{title}</h3>
+    <p class="card-description">{description}</p>
+  </div>
+
+  {decorations ? (
+    <div class="card-decorations">
+      <span class="dot dot-pink" />
+      <span class="dot dot-orange" />
+      <span class="pill pill-yellow" />
+      <span class="pill pill-pink" />
+    </div>
+  ) : null}
+</a>
+

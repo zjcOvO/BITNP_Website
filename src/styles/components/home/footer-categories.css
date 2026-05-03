@@ -1,0 +1,105 @@
+  .footer-categories {
+    width: 100%;
+    padding: 2rem 0;
+    background: var(--bg-color);
+    border-top: 1px solid var(--border-color);
+  }
+
+  .categories-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .category-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    text-decoration: none;
+    color: var(--text-color);
+    transition: transform 0.2s ease, color 0.2s ease;
+    padding: 0.5rem 1rem;
+    position: relative;
+  }
+
+  .category-item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: -0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 1px;
+    background: var(--border-color);
+    opacity: 0.5;
+  }
+
+  .category-item:hover {
+    transform: translateY(-2px);
+    color: var(--primary-color);
+  }
+
+  .category-main {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .category-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 4px;
+  }
+
+  .category-gradient {
+    display: inline-block;
+    width: 60px;
+    height: 6px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, #FF69B4 0%, #FFB366 100%);
+  }
+
+  .category-pinyin {
+    font-size: 0.7rem;
+    letter-spacing: 6px;
+    color: var(--text-color);
+    opacity: 0.6;
+    text-transform: uppercase;
+  }
+
+  .category-item:hover .category-pinyin {
+    opacity: 0.8;
+    color: var(--primary-color);
+  }
+
+  @media (max-width: 768px) {
+    .categories-container {
+      justify-content: center;
+      gap: 0.5rem 1.5rem;
+    }
+
+    .category-item:not(:last-child)::after {
+      display: none;
+    }
+
+    .category-name {
+      font-size: 0.95rem;
+      letter-spacing: 2px;
+    }
+
+    .category-pinyin {
+      font-size: 0.6rem;
+      letter-spacing: 3px;
+    }
+
+    .category-gradient {
+      width: 40px;
+      height: 4px;
+    }
+  }
