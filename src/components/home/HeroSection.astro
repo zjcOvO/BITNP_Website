@@ -90,12 +90,65 @@ const tapeText = "网络无限 开拓不懈 —— 网络开拓者协会 Net Pio
     const logoTrigger = document.getElementById('logo-trigger');
     const heroCards = document.getElementById('hero-cards');
     const heroDescription = document.getElementById('hero-description');
+    const associationLogo = logoTrigger?.querySelector('.association-logo');
+    const tapes = logoTrigger?.querySelectorAll('.tape-effect');
     
     let isLocked = false;
+    let currentLogoX = 0;
+    let currentLogoY = 0;
+    let targetLogoX = 0;
+    let targetLogoY = 0;
+    let animationId = null;
+    
+    // Easing function for smooth return
+    const easeOut = (t) => 1 - Math.pow(1 - t, 3);
+    let returnProgress = 0;
+    let startReturnX = 0;
+    let startReturnY = 0;
+    let isReturning = false;
+    
+    const animate = () => {
+      if (isReturning) {
+        returnProgress += 0.02;
+        if (returnProgress >= 1) {
+          currentLogoX = 0;
+          currentLogoY = 0;
+          isReturning = false;
+          returnProgress = 0;
+        } else {
+          const eased = easeOut(returnProgress);
+          currentLogoX = startReturnX * (1 - eased);
+          currentLogoY = startReturnY * (1 - eased);
+        }
+      } else {
+        // Smooth follow with lerp
+        currentLogoX += (targetLogoX - currentLogoX) * 0.15;
+        currentLogoY += (targetLogoY - currentLogoY) * 0.15;
+      }
+      
+      if (associationLogo) {
+        associationLogo.style.transform = `translate(${currentLogoX}px, ${currentLogoY}px)`;
+      }
+      
+      if (tapes && tapes.length > 0) {
+        const tapeDisplacement = 0.8;
+        tapes.forEach(tape => {
+          tape.style.transform = `translate(-50%, -50%) translate(${currentLogoX * tapeDisplacement}px, ${currentLogoY * tapeDisplacement}px) rotate(${tape.dataset.rotation}deg)`;
+        });
+      }
+      
+      animationId = requestAnimationFrame(animate);
+    };
+    
+    animate();
     
     if (logoTrigger && heroCards && heroDescription) {
       // 点击切换固定状态
-      logoTrigger.addEventListener('click', function() {
+      logoTrigger.addEventListener('click', function(e) {
+        // 排除头像和logo自身的点击，仅当点击wrapper空白区域时触发
+        if (e.target.closest('.avatar-decoration') || e.target.closest('.association-logo')) {
+          return;
+        }
         isLocked = !isLocked;
         if (isLocked) {
           heroCards.classList.add('hidden');
@@ -106,16 +159,39 @@ const tapeText = "网络无限 开拓不懈 —— 网络开拓者协会 Net Pio
         }
       });
       
-      // 鼠标悬停时，如果未锁定则切换
-      logoTrigger.addEventListener('mouseenter', function() {
-        if (!isLocked) {
-          heroCards.classList.add('hidden');
-          heroDescription.classList.add('visible');
-        }
+      // 鼠标移动计算偏移
+      logoTrigger.addEventListener('mousemove', function(e) {
+        const rect = logoTrigger.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        
+        const mouseX = e.clientX;
+        const mouseY = e.clientY;
+        
+        // 计算鼠标相对于中心的偏移
+        const offsetX = mouseX - centerX;
+        const offsetY = mouseY - centerY;
+        
+        // Logo向相反方向移动，最大偏移15px
+        const maxOffset = 15;
+        const distance = Math.sqrt(offsetX * offsetX + offsetY * offsetY);
+        const scale = Math.min(distance / 200, 1);
+        
+        targetLogoX = -(offsetX / distance) * maxOffset * scale || 0;
+        targetLogoY = -(offsetY / distance) * maxOffset * scale || 0;
+        
+        // 停止归位动画
+        isReturning = false;
+        returnProgress = 0;
       });
       
-      // 鼠标离开时，如果未锁定则恢复
+      // 鼠标离开时触发缓慢归位，同时如果未锁定则恢复卡片显示
       logoTrigger.addEventListener('mouseleave', function() {
+        startReturnX = currentLogoX;
+        startReturnY = currentLogoY;
+        isReturning = true;
+        returnProgress = 0;
+        
         if (!isLocked) {
           heroCards.classList.remove('hidden');
           heroDescription.classList.remove('visible');
