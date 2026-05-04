@@ -1,0 +1,165 @@
+.orbital-system {
+  position: relative;
+  width: 400px;
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.orbital-center {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: var(--dept-chairman);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), 
+              width 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+              height 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+              background 0.3s ease;
+  z-index: 10;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.orbital-icon {
+  width: 40px;
+  height: 40px;
+  color: white;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.orbital-center .orbital-icon {
+  width: 50px;
+  height: 50px;
+}
+
+.orbital-circle .orbital-icon {
+  width: 32px;
+  height: 32px;
+}
+
+.orbital-circle.shrunk .orbital-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.orbital-center:hover {
+  transform: scale(1.05);
+}
+
+.orbital-center.active {
+  transform: scale(1.5);
+}
+
+.orbital-rings {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+}
+
+.orbital-circle {
+  position: absolute;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+              width 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+              height 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+              left 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+              top 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+              background 0.3s ease,
+              opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+.orbital-circle:hover {
+  transform: scale(1.1);
+}
+
+.orbital-circle.tech {
+  background: var(--dept-tech);
+}
+
+.orbital-circle.clinic {
+  background: var(--dept-clinic);
+}
+
+.orbital-circle.media {
+  background: var(--dept-media);
+}
+
+.orbital-circle.shrunk {
+  width: 40px;
+  height: 40px;
+  font-size: 10px;
+}
+
+@media (max-width: 1024px) {
+  .orbital-system {
+    width: 300px;
+    height: 300px;
+  }
+  
+  .orbital-center {
+    width: 80px;
+    height: 80px;
+    font-size: 14px;
+  }
+  
+  .orbital-rings {
+    width: 220px;
+    height: 220px;
+  }
+  
+  .orbital-circle {
+    width: 55px;
+    height: 55px;
+    font-size: 12px;
+  }
+  
+  .orbital-circle.shrunk {
+    width: 30px;
+    height: 30px;
+    font-size: 8px;
+  }
+}
+
+@media (max-width: 768px) {
+  .orbital-system {
+    width: 250px;
+    height: 250px;
+  }
+  
+  .orbital-center {
+    width: 60px;
+    height: 60px;
+    font-size: 12px;
+  }
+  
+  .orbital-rings {
+    width: 180px;
+    height: 180px;
+  }
+  
+  .orbital-circle {
+    width: 45px;
+    height: 45px;
+    font-size: 10px;
+  }
+  
+  .orbital-circle.shrunk {
+    width: 25px;
+    height: 25px;
+    font-size: 6px;
+  }
+}

@@ -1,0 +1,163 @@
+---
+import { departments } from '../../data/departments.js';
+import '../../styles/components/home/orbital-system.css';
+
+const chairman = departments.find(d => d.id === 'chairman');
+const orbitingDepts = departments.filter(d => !d.isCenter);
+
+const icons = {
+  chairman: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>`,
+  tech: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>`,
+  clinic: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/></svg>`,
+  media: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/></svg>`
+};
+---
+
+<div class="orbital-system" id="orbital-system" data-active="chairman">
+  <div 
+    class="orbital-center" 
+    data-dept="chairman"
+    style={`background: ${chairman?.color}`}
+  >
+    <span class="orbital-icon" set:html={icons.chairman} />
+  </div>
+  
+  <div class="orbital-rings">
+    {orbitingDepts.map((dept, index) => (
+      <div 
+        class={`orbital-circle ${dept.id}`}
+        data-dept={dept.id}
+        data-index={index}
+        style={`background: ${dept.color}`}
+      >
+        <span class="orbital-icon" set:html={icons[dept.id]} />
+      </div>
+    ))}
+  </div>
+</div>
+
+<script is:inline>
+  const DEPT_ORDER = ['chairman', 'tech', 'clinic', 'media'];
+  const ORBIT_RADIUS = 130;
+  const CENTER_SIZE = 100;
+  const CIRCLE_SIZE = 70;
+  const SHRUNK_SIZE = 40;
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const system = document.getElementById('orbital-system');
+    const center = system?.querySelector('.orbital-center');
+    const circles = Array.from(system?.querySelectorAll('.orbital-circle') || []);
+    const icons = Array.from(system?.querySelectorAll('.orbital-circle .orbital-icon') || []);
+    
+    if (!system || !center || circles.length === 0) return;
+
+    let currentActive = 'chairman';
+
+    const getConfig = (activeDept) => {
+      if (activeDept === 'chairman') {
+        return {
+          centerScale: 1.5,
+          orbitScale: 0.3,
+          ringRotation: 0,
+          angles: [0, 120, 240]
+        };
+      }
+      
+      const activeIndex = DEPT_ORDER.indexOf(activeDept);
+      const ringRotation = (1-activeIndex) * 120;
+      
+      return {
+        centerScale: 1.0,
+        orbitScale: 1.0,
+        ringRotation: ringRotation,
+        angles: [0, 120, 240]
+      };
+    };
+
+    function updatePositions(activeDept) {
+      currentActive = activeDept;
+      const config = getConfig(activeDept);
+      
+      const scale = config.centerScale;
+      const size = CENTER_SIZE * scale;
+      center.style.width = `${size}px`;
+      center.style.height = `${size}px`;
+      center.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+      center.classList.toggle('active', activeDept === 'chairman');
+
+      const ring = system.querySelector('.orbital-rings');
+      if (ring) {
+        ring.style.transform = `rotate(${config.ringRotation}deg)`;
+        ring.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+      }
+
+      circles.forEach((circle, i) => {
+        const angle = (config.angles[i] - 90) * (Math.PI / 180);
+        const orbitScale = config.orbitScale;
+        const radius = ORBIT_RADIUS * orbitScale;
+        
+        const x = Math.cos(angle) * radius;
+        const y = Math.sin(angle) * radius;
+        
+        circle.style.left = `calc(50% + ${x}px - ${CIRCLE_SIZE * orbitScale / 2}px)`;
+        circle.style.top = `calc(50% + ${y}px - ${CIRCLE_SIZE * orbitScale / 2}px)`;
+        circle.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+        
+        if (orbitScale < 0.5) {
+          circle.classList.add('shrunk');
+          circle.style.width = `${SHRUNK_SIZE}px`;
+          circle.style.height = `${SHRUNK_SIZE}px`;
+        } else {
+          circle.classList.remove('shrunk');
+          circle.style.width = `${CIRCLE_SIZE}px`;
+          circle.style.height = `${CIRCLE_SIZE}px`;
+        }
+      });
+
+      icons.forEach((icon, i) => {
+        icon.style.transform = `rotate(${-config.ringRotation}deg)`;
+        icon.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+      });
+    }
+
+    function getNextDept(current) {
+      const currentIndex = DEPT_ORDER.indexOf(current);
+      const nextIndex = (currentIndex + 1) % DEPT_ORDER.length;
+      return DEPT_ORDER[nextIndex];
+    }
+
+    function handleDeptClick(deptId) {
+      if (deptId === 'chairman' && currentActive === 'chairman') {
+        const nextDept = getNextDept('chairman');
+        system.dataset.active = nextDept;
+        updatePositions(nextDept);
+        window.dispatchEvent(new CustomEvent('department-change', { 
+          detail: { activeDept: nextDept } 
+        }));
+      } else {
+        system.dataset.active = deptId;
+        updatePositions(deptId);
+        window.dispatchEvent(new CustomEvent('department-change', { 
+          detail: { activeDept: deptId } 
+        }));
+      }
+    }
+
+    center.addEventListener('click', () => handleDeptClick('chairman'));
+    circles.forEach(circle => {
+      circle.addEventListener('click', () => {
+        handleDeptClick(circle.dataset.dept);
+      });
+    });
+
+    window.addEventListener('department-init', (e) => {
+      updatePositions(e.detail.activeDept);
+    });
+    
+    window.addEventListener('department-change', (e) => {
+      updatePositions(e.detail.activeDept);
+    });
+
+    updatePositions('chairman');
+  });
+</script>

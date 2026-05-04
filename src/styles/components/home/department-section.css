@@ -1,0 +1,96 @@
+.department-section {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 60px 40px 80px;
+  background: var(--main-bg);
+  position: relative;
+  box-sizing: border-box;
+}
+
+.nav-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  padding-bottom: 30px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  z-index: 100;
+}
+
+.nav-container.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.dept-layout {
+  display: grid;
+  grid-template-columns: 1fr 0.5fr;
+  gap: 30px;
+  flex: 1;
+  align-items: center;
+  max-width: 1600px;
+  height: 95vh;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.dept-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 90vh;
+  padding-right: 15px;
+}
+
+.dept-right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+@media (max-width: 1200px) {
+  .department-section {
+    padding: 30px 40px 100px;
+  }
+  
+  .dept-layout {
+    gap: 40px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .dept-layout {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  
+  .dept-left {
+    order: 2;
+    padding-right: 0;
+  }
+  
+  .dept-right {
+    order: 1;
+  }
+  
+  .orbital-system {
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .department-section {
+    padding: 20px 20px 100px;
+  }
+  
+  .dept-layout {
+    gap: 20px;
+  }
+}

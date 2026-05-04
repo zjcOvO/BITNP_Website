@@ -1,7 +1,7 @@
 ---
 import Layout from '../layout/BaseLayout.astro';
 import HeroSection from '../components/home/HeroSection.astro';
-import FooterCategories from '../components/home/FooterCategories.astro';
+import DepartmentSection from '../components/home/DepartmentSection.astro';
 import '../styles/pages/index.css';
 ---
 
@@ -11,10 +11,12 @@ import '../styles/pages/index.css';
   fullWidth={true}
   showFooter={false}
 >
-  <div class="home-page">
-    <!-- 主视觉区：Logo + 标题 + 简介 -->
-    <HeroSection />
-    
+  <div class="scroll-container">
+    <section class="page-section" id="page-1">
+      <HeroSection />
+    </section>
+    <section class="page-section" id="page-2">
+      <DepartmentSection />
+    </section>
   </div>
 </Layout>
-

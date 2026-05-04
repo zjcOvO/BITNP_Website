@@ -1,0 +1,26 @@
+---
+import OrbitalSystem from './OrbitalSystem.astro';
+import DepartmentCards from './DepartmentCards.astro';
+import '../../styles/components/home/department-section.css';
+---
+
+<section class="department-section" id="page-2">
+  <div class="dept-layout">
+    <div class="dept-left">
+      <DepartmentCards />
+    </div>
+    <div class="dept-right">
+      <OrbitalSystem />
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+      window.dispatchEvent(new CustomEvent('department-init', { 
+        detail: { activeDept: 'chairman' } 
+      }));
+    }, 100);
+  });
+</script>

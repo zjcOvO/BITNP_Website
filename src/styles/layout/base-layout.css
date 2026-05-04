@@ -3,6 +3,12 @@
                 /* 品牌颜色 */
                 --primary-color: #d97319;
                 
+                /* 部门颜色 */
+                --dept-chairman: #d97319;
+                --dept-tech: #3498db;
+                --dept-clinic: #27ae60;
+                --dept-media: #9b59b6;
+                
                 /* 亮模式颜色 */
                 --bg-color: #ffffff;
                 --text-color: #333333;
