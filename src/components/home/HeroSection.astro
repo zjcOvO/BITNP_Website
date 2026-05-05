@@ -197,6 +197,14 @@ const tapeText = "网络无限 开拓不懈 —— 网络开拓者协会 Net Pio
           heroDescription.classList.remove('visible');
         }
       });
+
+      // 鼠标进入时触发卡片隐藏
+      logoTrigger.addEventListener('mouseenter', function() {
+        if (!isLocked) {
+          heroCards.classList.add('hidden');
+          heroDescription.classList.add('visible');
+        }
+      });
     }
   });
 </script>

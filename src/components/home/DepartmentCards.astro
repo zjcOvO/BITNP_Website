@@ -3,13 +3,6 @@ import { departments } from '../../data/departments.js';
 import '../../styles/components/home/department-cards.css';
 
 const allDepts = departments;
-
-const icons = {
-  chairman: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>`,
-  tech: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>`,
-  clinic: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/></svg>`,
-  media: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/></svg>`
-};
 ---
 
 <div class="department-cards-wrapper" id="department-cards-wrapper" tabindex="0">
@@ -68,20 +61,6 @@ const icons = {
       ))}
     </div>
   </div>
-  
-  <nav class="bottom-navigation" id="bottom-navigation">
-    {allDepts.map((dept, index) => (
-      <button 
-        class={`nav-dot ${dept.id} ${index === 0 ? 'active' : ''}`}
-        data-dept={dept.id}
-        data-index={index}
-        style={`--dept-color: ${dept.color}`}
-        aria-label={`导航到 ${dept.name}`}
-      >
-        <span class="nav-icon" set:html={icons[dept.id]} />
-      </button>
-    ))}
-  </nav>
 </div>
 
 <script is:inline>
@@ -90,8 +69,6 @@ const icons = {
     const contentArea = document.getElementById('dept-content-area');
     const deptNameItems = wrapper?.querySelectorAll('.dept-name-item');
     const deptContentSections = wrapper?.querySelectorAll('.dept-content-section');
-    const bottomNav = document.getElementById('bottom-navigation');
-    const navDots = bottomNav?.querySelectorAll('.nav-dot');
     
     if (!wrapper || !contentArea) return;
     
@@ -118,13 +95,8 @@ const icons = {
         section.classList.remove('active');
       });
       
-      navDots?.forEach((dot) => {
-        dot.classList.remove('active');
-      });
-      
       deptNameItems?.[index]?.classList.add('active');
       deptContentSections?.[index]?.classList.add('active');
-      navDots?.[index]?.classList.add('active');
       
       window.dispatchEvent(new CustomEvent('department-change', { 
         detail: { activeDept: deptNameItems?.[index]?.dataset.dept || 'chairman' } 
@@ -189,18 +161,6 @@ const icons = {
           descriptionTimeout = null;
         }
         switchToDepartment(index);
-      });
-    });
-    
-    navDots?.forEach((dot) => {
-      dot.addEventListener('click', () => {
-        const deptId = dot.dataset.dept;
-        const deptIndex = Array.from(deptNameItems || []).findIndex(
-          item => item.dataset.dept === deptId
-        );
-        if (deptIndex >= 0) {
-          switchToDepartment(deptIndex);
-        }
       });
     });
     
