@@ -7,7 +7,6 @@ export const departments = [
     activities: [
       { title: '发展规划', description: '统筹兼顾网协的发展规划，选择取舍适合的项目及方向' },
       { title: '部门协调', description: '在各个部门之间进行串联，团结成员关系，提高组织凝聚力' },
-      { title: '项目参与', description: '按照技术能力参与各个项目的进行' },
       { title: '课程讲授', description: '为大家讲授课程，帮助大家了解更多与网络有关的技术知识' },
       { title: '活动管理', description: '管理网协活动正常有序进行' }
     ],
@@ -21,9 +20,8 @@ export const departments = [
     activities: [
       { title: '技术分享会', description: '作为最重要的常规活动，可学习 HTML、CSS、JavaScript 等网页前端技术，Python、C/C++、C#、Java、PHP 等编程语言，以及 LLM、数字偶像、量子计算等技术热点' },
       { title: '课程串讲', description: '负责全校"大计基"和 C 语言编程串讲，可系统复习编程知识，也能参与备课或讲解，体验"为人师"的乐趣' },
-      { title: '项目制作', description: '参与制作许多有趣实用的项目和网站，参与深秋歌会等大型活动的直播工作' },
-      { title: '系统维护', description: '学习系统维护和硬件组装，与电脑诊所合作，为全校提供技术支持' },
-      { title: '团建活动', description: '参与丰富的团建活动，结识志同道合的技术小伙伴' }
+      { title: '项目制作', description: '制作许多有趣实用的项目和网站，深度实践网络技术，为校园网络服务提供支持与创新活力' },
+      { title: '直播服务', description: '负责全校直播活动的直播工作，包括直播推流、直播录制、直播后期制作等' }
     ],
     isCenter: false
   },
@@ -36,8 +34,7 @@ export const departments = [
       { title: '每日委托', description: '完成来自全校师生的电脑维修需求，业务包括软件安装、硬件加装与更换、电脑推荐、网络诊断等' },
       { title: '电脑导购', description: '每年为新生制作电脑选购指南，为刚步入大学的同学们选购电脑答疑解惑' },
       { title: '传说任务', description: '时常前往周边学校进行电脑义诊交流，如北京中医药大学等，展现技术与情怀' },
-      { title: '技能学习', description: '学习清灰、换硅脂、重装系统等技能，避免被外界"割韭菜"，在帮助同学中获得荣誉感' },
-      { title: '团建活动', description: '团队聚会独具传统特色，营造团结友爱、轻松愉快的交流氛围' }
+      { title: '技能学习', description: '学习清灰、换硅脂、重装系统等技能，避免被外界"割韭菜"，在帮助同学中获得荣誉感' }
     ],
     isCenter: false
   },
@@ -49,8 +46,7 @@ export const departments = [
     activities: [
       { title: '技能学习', description: '每周高质量例会教学制作 PPT，掌握 PS、AE 技术，学习微信公众号运营、Pr 等软件使用' },
       { title: '宣传工作', description: '在各类活动中负责推送制作、海报制作、视频剪辑等宣传，助力网协以良好形象面向全校师生' },
-      { title: '活动策划', description: '策划与管理经济支出，负责与学校其他组织的合作项目，做到内外兼修' },
-      { title: '团建活动', description: '在全网协范围组织活动，例如招新见面会、冬至包饺子等活动，氛围轻松融洽' },
+      { title: '活动策划', description: '策划与管理经济支出，负责与学校其他组织的合作项目以及组织全网协范围内的活动，做到内外兼修' },
       { title: '新媒体运营', description: '负责网协官方公众号运营，学习新媒体传播技巧' }
     ],
     isCenter: false

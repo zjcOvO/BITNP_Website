@@ -1,0 +1,86 @@
+---
+import Footer from '../Footer.astro';
+import { activities } from '../../data/activities.js';
+import '../../styles/components/home/activity-section.css';
+---
+
+<section class="activity-section" id="page-3">
+  <div class="news-header">
+    <h2>最新动态</h2>
+    <p>了解网协最新活动与资讯</p>
+  </div>
+  
+  <div class="cards-container" id="activity-cards-container" tabindex="0">
+    {activities.map((activity, index) => (
+      <div 
+        class="activity-card"
+        style={`--card-color: ${activity.color}`}
+        data-index={index}
+      >
+        <span class="card-category">{activity.category}</span>
+        <span class="card-date">{activity.date}</span>
+        <h3 class="card-title">{activity.title}</h3>
+        <p class="card-desc">{activity.description}</p>
+      </div>
+    ))}
+  </div>
+  
+  <div class="footer-wrapper">
+    <Footer />
+  </div>
+</section>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    const container = document.getElementById('activity-cards-container');
+    if (!container) return;
+    
+    const cards = container.querySelectorAll('.activity-card');
+    const totalCards = cards.length;
+    
+    container.addEventListener('wheel', (e) => {
+      const isHorizontalScroll = e.shiftKey || Math.abs(e.deltaX) > Math.abs(e.deltaY);
+      if (!isHorizontalScroll) return;
+      
+      e.preventDefault();
+      
+      const scrollAmount = e.deltaX !== 0 ? e.deltaX : e.deltaY;
+      
+      if (scrollAmount > 30) {
+        container.scrollBy({ left: 300, behavior: 'smooth' });
+      } else if (scrollAmount < -30) {
+        container.scrollBy({ left: -300, behavior: 'smooth' });
+      }
+    }, { passive: false });
+    
+    container.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        container.scrollBy({ left: 320, behavior: 'smooth' });
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        container.scrollBy({ left: -320, behavior: 'smooth' });
+      }
+    });
+    
+    let touchStartX = 0;
+    let touchEndX = 0;
+    
+    container.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+    
+    container.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      const diff = touchStartX - touchEndX;
+      
+      if (Math.abs(diff) > 50) {
+        if (diff > 0) {
+          container.scrollBy({ left: 320, behavior: 'smooth' });
+        } else {
+          container.scrollBy({ left: -320, behavior: 'smooth' });
+        }
+      }
+    }, { passive: true });
+  });
+</script>
