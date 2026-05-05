@@ -11,13 +11,15 @@ import serviceIcon from '../assets/service.svg';
 import { Image } from 'astro:assets';
 import ThemeToggle from './ThemeToggle.astro';
 import '../styles/components/header.css';
+
+const BASE_URL = import.meta.env.BASE_URL;
 ---
 
 <header class="header">
   <!-- 左侧部分：Logo + 导航 -->
   <div class="header-left">
     <!-- 社团 Logo -->
-    <a href="/" class="logo">
+    <a href={BASE_URL || '/'} class="logo">
       <Image 
         src={icon} 
         alt="BITNP Logo" 
@@ -33,15 +35,15 @@ import '../styles/components/header.css';
     
     <!-- 导航菜单 -->
     <nav class="nav-menu">
-      <a href="/news" class="nav-item">
+      <a href={`${BASE_URL || '/'}news`} class="nav-item">
         <Image src={newsIcon} alt="新闻" width={20} height={20} class="nav-icon" loading={'eager'} />
         <span class="nav-text">新闻</span>
       </a>
-      <a href="/blog" class="nav-item">
+      <a href={`${BASE_URL || '/'}blog`} class="nav-item">
         <Image src={blogIcon} alt="博客" width={20} height={20} class="nav-icon" loading={'eager'} />
         <span class="nav-text">博客</span>
       </a>
-      <a href="/services" class="nav-item">
+      <a href={`${BASE_URL || '/'}services`} class="nav-item">
         <Image src={serviceIcon} alt="服务" width={20} height={20} class="nav-icon" loading={'eager'} />
         <span class="nav-text">服务</span>
       </a>
