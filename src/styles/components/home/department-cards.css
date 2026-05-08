@@ -296,10 +296,15 @@
   .dept-names-column {
     gap: 10px;
   }
+  .dept-name-item:hover .vertical-text,
+  .dept-name-item.active .vertical-text,
+  .dept-name-item.hovering .vertical-text {
+    letter-spacing: 18px;
+  }
   
   .vertical-text {
-    font-size: 12px;
-    letter-spacing: 8px;
+    font-size: 14px;
+    letter-spacing: 16px;
   }
   
 }
@@ -308,10 +313,16 @@
   .dept-names-column {
     gap: 5px;
   }
+
+  .dept-name-item:hover .vertical-text,
+  .dept-name-item.active .vertical-text,
+  .dept-name-item.hovering .vertical-text {
+    letter-spacing: 15px;
+  }
   
   .vertical-text {
-    font-size: 10px;
-    letter-spacing: 6px;
+    font-size: 12px;
+    letter-spacing: 13px;
   }
 }
 

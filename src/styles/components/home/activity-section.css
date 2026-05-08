@@ -49,6 +49,52 @@
   display: none;
 }
 
+.activity-section .cards-wrapper {
+  position: relative;
+  flex: 2;
+  display: flex;
+  align-items: center;
+}
+
+.activity-section .scroll-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  background: white;
+  color: #333;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+  z-index: 20;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.activity-section .scroll-btn:hover {
+  transform: translateY(-50%) scale(1.1);
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
+}
+
+.activity-section .scroll-btn-left {
+  left: 10px;
+}
+
+.activity-section .scroll-btn-right {
+  right: 10px;
+}
+
+.activity-section .scroll-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
 .activity-section .activity-card {
   flex-shrink: 0;
   width: 320px;
